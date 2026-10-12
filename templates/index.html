@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Attendance Management System</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #f4f6f8;
+            margin: 0;
+        }
+
+        header {
+            background-color: #1769aa;
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+
+        .container {
+            width: 85%;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+        }
+
+        input {
+            padding: 10px;
+            margin: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #1769aa;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 25px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #1769aa;
+            color: white;
+        }
+
+        a {
+            text-decoration: none;
+            margin: 5px;
+        }
+
+        .edit {
+            color: blue;
+        }
+
+        .delete {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Attendance Management System</h1>
+        <p>Exam Eligibility Based on 75% Attendance</p>
+    </header>
+
+    <div class="container">
+
+        <h2>Add Student</h2>
+
+        <form method="POST" action="/add">
+
+            <input type="text"
+                   name="roll_no"
+                   placeholder="Roll Number"
+                   required>
+
+            <input type="text"
+                   name="name"
+                   placeholder="Student Name"
+                   required>
+
+            <input type="number"
+                   name="total_classes"
+                   placeholder="Total Classes"
+                   required>
+
+            <input type="number"
+                   name="attended_classes"
+                   placeholder="Attended Classes"
+                   required>
+
+            <button type="submit">Add Student</button>
+
+        </form>
+
+
+        <h2>Student Attendance</h2>
+
+        <table>
+
+            <tr>
+                <th>Roll No</th>
+                <th>Name</th>
+                <th>Total Classes</th>
+                <th>Attended</th>
+                <th>Attendance %</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+
+
+            {% for student in students %}
+
+            <tr>
+
+                <td>{{ student.roll_no }}</td>
+
+                <td>{{ student.name }}</td>
+
+                <td>{{ student.total_classes }}</td>
+
+                <td>{{ student.attended_classes }}</td>
+
+                <td>
+                    {{ "%.2f"|format(
+                        (student.attended_classes / student.total_classes) * 100
+                    ) }}%
+                </td>
+
+                <td>
+
+                    {% if (student.attended_classes / student.total_classes) * 100 >= 75 %}
+
+                        <b style="color: green;">
+                            Eligible
+                        </b>
+
+                    {% else %}
+
+                        <b style="color: red;">
+                            Not Eligible
+                        </b>
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+
+                    <a class="edit"
+                       href="/edit/{{ student.id }}">
+                        Edit
+                    </a>
+
+                    |
+
+                    <a class="delete"
+                       href="/delete/{{ student.id }}"
+                       onclick="return confirm('Are you sure you want to delete this student?')">
+                        Delete
+                    </a>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+    </div>
+
+</body>
+
+</html>
